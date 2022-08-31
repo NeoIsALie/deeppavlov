@@ -9,13 +9,13 @@ from argparse import ArgumentParser
    check() -- проверяет сумму;
 2) Путь к файлу передается в read_data() в качестве аргумента, так скрипт может быть использован для чтения любого 
    .csv файла;
-3) Метод read_data() обернут в конструкцию try/except - функция будет поднимать ошибку если указанный файл не найден, 
+3) Метод read_csv() обернут в конструкцию try/except - функция будет поднимать ошибку если указанный файл не найден, 
    или пуст;
-4) С помощью select_dtypes в функцию check() передаются данные типа int и float, если в .csv файле будет колонка с 
+4) С помощью select_dtypes в функцию check передаются данные типа int и float, если в .csv файле будет колонка с 
    данными типа str - она отсеется (предполагается, что в колонках данные одного типа);
-5) Внутри функции check() добавлен метод fillna(0), который  заменит осутствующие данные объектов (если такие будут
+5) Внутри функции check() добавил метод fillna(0), который  заменит осутствующие данные объектов (если такие будут
    в .csv файле) на числовые значения (в нашем случае на 0)
-6) Для ускорения вычислений в check() массив конвертируется в numpy array с помощью метода to_numpy()
+6) Для ускорения вычислений в checker() массив конвертируется в numpy array с помощью метода to_numpy()
 
 """
 
@@ -49,10 +49,10 @@ def read_data(path: str = 'data.csv') -> Optional[pd.DataFrame]:
     try:
         df = pd.read_csv(path, header=None)
         return df.select_dtypes(include=['float64', 'int64'])
-    except pd.errors.EmptyDataError as error:
-        raise error("No data in file")
-    except FileNotFoundError as error:
-        raise error
+    except pd.errors.EmptyDataError:
+        print("No data in file")
+    except FileNotFoundError:
+        print("No file")
 
 
 if __name__ == '__main__':
